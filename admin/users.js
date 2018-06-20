@@ -1,6 +1,70 @@
 var main = $("#main")[0];
 
+class Option extends React.Component{
+  render(){
+    return(<option value={this.props.option_value}>{this.props.option_name}</option>);
+  }
+}
+
+
 class Users extends React.Component {
+  componentDidMount(){
+    var designationOptionContainer = $("#select-designation")[0];
+    $.ajax({
+          type: "Post",
+          url: "utils/fetch_designation_list.php",
+          success: function(data) {
+                 var obj = JSON.parse(data);
+
+                 console.log(obj);
+                 var listItem = obj.map((eventObject) =>
+                   <Option key = {eventObject.designation_id} option_value={eventObject.designation_id} option_name={eventObject.designation_name}/>
+                 );
+                 ReactDOM.render(
+                  <select className="custom-select" id="input-designation" required>
+                   {listItem}</select>,designationOptionContainer
+                 );
+          }
+        });
+    var positionOptionContainer = $("#select-position")[0];
+    $.ajax({
+          type: "Post",
+          url: "utils/fetch_position_list.php",
+          success: function(data) {
+                 var obj = JSON.parse(data);
+
+                 console.log(obj);
+                 var listItem = obj.map((eventObject) =>
+                   <Option key = {eventObject.position_id} option_value={eventObject.position_id} option_name={eventObject.position_name}/>
+                 );
+                 ReactDOM.render(
+                  <select className="custom-select" id="input-position" required>
+                   {listItem}</select>,positionOptionContainer
+                 );
+          }
+        });
+  }
+
+  addUser(){
+    var fname = $("#fname").val();
+    var mname = $("#mname").val();
+    var lname = $("#lname").val();
+    var gender = $("#select-gender").val();
+    var designation = $("#select-designation").val();
+    var position = $("#selec-position").val();
+    var contactnumber = $("#contact-number").val();
+    var username = $("#username").val();
+    var password = $("#password").val();
+    var date = $("#date").val();
+    var status = $("#status").val();
+
+  }
+  validateAddUser(){
+
+  }
+  fetchDesignationList(){
+
+  }
   render(){
     return(
       <div className = "row">
@@ -29,45 +93,40 @@ class Users extends React.Component {
 
                    <div className = "col-sm-6">
                      {/* account id */}
-                      <div className="input-group mb-3">
-                        <input type="text" className="form-control" placeholder="Account ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
-                      </div>
+                       {/* <div className="input-group mb-3">
+                         <input type="text" className="form-control" placeholder="Account ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                       </div> */}
                       {/* firstname */}
                       <div className="input-group mb-3">
-                       <input type="text" className="form-control" placeholder="First Name" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                       <input type="text" id="fname" className="form-control" placeholder="First Name" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
                      </div>
                      {/* Middlename */}
                      <div className="input-group mb-3">
-                      <input type="text" className="form-control" placeholder="Middle Name" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                      <input type="text" id ="mname" className="form-control" placeholder="Middle Name" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
                     </div>
                     {/* lastname */}
                     <div className="input-group mb-3">
-                     <input type="text" className="form-control" placeholder="Last Name" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                     <input type="text" id="lname" className="form-control" placeholder="Last Name" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
                     </div>
+                    {/* gender */}
                     <div className="input-group mb-3">
-                      <select className="custom-select" id="inputGroupSelect04" required>
+                      <select className="custom-select" id="select-gender" required>
                         <option value="">Gender</option>
                         <option value="1">Male</option>
                         <option value="2">Female</option>
                       </select>
                     </div>
-                    <div className="input-group mb-3">
-                      <select className="custom-select" id="inputGroupSelect04" required>
-                        <option value="">Designation</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                      </select>
+                    {/* designation */}
+                    <div className="input-group mb-3" id="select-designation">
+
                     </div>
-                    <div className="input-group mb-3">
-                      <select className="custom-select" id="inputGroupSelect04" required>
-                        <option value="">Position</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                      </select>
+                    {/* position */}
+                    <div className="input-group mb-3" id="select-position">
+
                     </div>
                     {/* contact Number */}
                     <div className="input-group mb-3">
-                     <input type="contact" className="form-control" placeholder="Contact Number" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                     <input type="contact" id="contactnumber" className="form-control" placeholder="Contact Number" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
                     </div>
 
                   </div>
@@ -75,21 +134,22 @@ class Users extends React.Component {
                    <div className = "col-sm-6">
                      {/* username */}
                      <div className="input-group mb-3">
-                      <input type="text" className="form-control" placeholder="Username" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                      <input type="text" id = "username" className="form-control" placeholder="Username" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
                      </div>
                      {/* password */}
                      <div className="input-group mb-3">
-                      <input type="password" className="form-control" placeholder="Password" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                      <input type="password" id ="password" className="form-control" placeholder="Password" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
                      </div>
+                     {/* date */}
                      <div className="input-group mb-3">
-                      <input type="date" className="form-control" placeholder="Password" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
+                      <input type="date" id = "date" className="form-control" placeholder="Password" aria-label="Recipient's username" aria-describedby="basic-addon2" required/>
                      </div>
                      {/* status */}
-                     <div className="input-group mb-3">
-                       <select className="custom-select" id="inputGroupSelect04" required>
+                     <div className="input-group mb-3" id="select-status">
+                       <select className="custom-select" id="inputGroupSelect04" defaultValue="Status" required>
                          <option value="">Status</option>
-                         <option value="1">Single</option>
-                         <option value="2">Double</option>
+                         <option value="singe">Single</option>
+                         <option value="2">Married</option>
                        </select>
                      </div>
 

@@ -15,7 +15,7 @@ class PositionsList extends React.Component{
       success:function(data){
         console.log(data);
         if (data=="success") {
-          fetchPositionList();
+          fetchList();
           $("#positionModal"+posID).modal('hide');
         }
       }
@@ -32,7 +32,7 @@ class PositionsList extends React.Component{
       success:function(data){
         console.log(data);
         if (data=="success") {
-          fetchPositionList();
+          fetchList();
         }
       }
     });
@@ -79,7 +79,7 @@ class Designation extends React.Component{
       success:function(data){
         console.log(data);
         if (data=="success") {
-          fetchDesignationList();
+          fetchList();
         }
       }
     });
@@ -94,7 +94,7 @@ class Designation extends React.Component{
       success:function(data){
         console.log(data);
         if (data=="success") {
-          fetchDesignationList();
+          fetchList();
           $("#designationModal"+designationID).modal('hide');
         }
       }
@@ -131,7 +131,7 @@ class Designation extends React.Component{
     );
   }
 }
-function fetchPositionList(){
+function fetchList(){
   var postionListContainer = $("#postionListContainer")[0];
   $.ajax({
         type: "Post",
@@ -149,31 +149,29 @@ function fetchPositionList(){
                );
         }
       });
-}
-function fetchDesignationList(){
-  var postionListContainer = $("#designationListContainer")[0];
-  $.ajax({
-        type: "Post",
-        url: "utils/fetch_designation_list.php",
-        success: function(data) {
-               var obj = JSON.parse(data);
+      var postionListContainer = $("#designationListContainer")[0];
+      $.ajax({
+            type: "Post",
+            url: "utils/fetch_designation_list.php",
+            success: function(data) {
+                   var obj = JSON.parse(data);
 
-               console.log(obj);
-               var listItem = obj.map((eventObject) =>
-                 <Designation key = {eventObject.designation_id} designation_id={eventObject.designation_id} designation_name={eventObject.designation_name}/>
-               );
-               ReactDOM.render(
-                 <div className = "list-group w-100 m-3">
-                 {listItem}</div>,postionListContainer
-               );
-        }
-      });
+                   console.log(obj);
+                   var listItem = obj.map((eventObject) =>
+                     <Designation key = {eventObject.designation_id} designation_id={eventObject.designation_id} designation_name={eventObject.designation_name}/>
+                   );
+                   ReactDOM.render(
+                     <div className = "list-group w-100 m-3">
+                     {listItem}</div>,postionListContainer
+                   );
+            }
+          });
 }
+
 
 class Utils extends React.Component {
   componentDidMount(){
-    fetchPositionList();
-    fetchDesignationList();
+    fetchList();
   }
   removePosition(){
 
@@ -189,7 +187,7 @@ class Utils extends React.Component {
           console.log(data);
           if (data=="success") {
             $("#postion-name").val("");
-            fetchPositionList();
+            fetchList();
           }
         }
       });
@@ -206,7 +204,24 @@ class Utils extends React.Component {
           console.log(data);
           if (data=="success") {
             $("#designation-name").val("");
-            fetchDesignationList();
+            fetchList();
+          }
+        }
+      });
+    }
+  }
+  addStatus(){
+    var designation_name = $("#designation-name").val();
+    if (designation_name!="") {
+      $.ajax({
+        url:'utils/utils_designation_insert.php',
+        method:"POST",
+        data:{designation_name:designation_name},
+        success:function(data){
+          console.log(data);
+          if (data=="success") {
+            $("#designation-name").val("");
+            fetchList();
           }
         }
       });
@@ -218,45 +233,69 @@ class Utils extends React.Component {
         <div className = "col-sm-12 mb-3">
           <h3 className="text-dark font-weight-bold">Utils</h3>
         </div>
-            <div className ="col">
-              <div class="card border-white">
-                <div class="card-body">
-                  <div className = "row">
-                    <div className ="col-sm-12">
-                      <h5 className ="font-weight-bold text-dark">Designation</h5>
-                    </div>
-                    <div className="col-sm-9">
-                      <input type="text" id="designation-name"  className="form-control w-100" aria-describedby="emailHelp" placeholder="Enter Designation"/>
-                    </div>
-                    <div class="col-sm-3">
-                      <button type="button" onClick={this.addDesignation.bind(this)} className="btn btn-success w-100">Add</button>
-                    </div>
+        <div className = "row">
+          <div className ="col">
+            <div class="card border-white">
+              <div class="card-body">
+                <div className = "row">
+                  <div className ="col-sm-12">
+                    <h5 className ="font-weight-bold text-dark">Designation</h5>
                   </div>
-                  <div id="designationListContainer" className="row">
+                  <div className="col-sm-9">
+                    <input type="text" id="designation-name"  className="form-control w-100" aria-describedby="emailHelp" placeholder="Enter Designation"/>
                   </div>
+                  <div class="col-sm-3">
+                    <button type="button" onClick={this.addDesignation.bind(this)} className="btn btn-success w-100">Add</button>
+                  </div>
+                </div>
+                <div id="designationListContainer" className="row">
                 </div>
               </div>
             </div>
-            <div className ="col">
-              <div class="card border-white">
-                <div class="card-body">
-                  <div className = "row">
-                    <div className ="col-sm-12">
-                      <h5 className ="font-weight-bold text-dark">Positions</h5>
-                    </div>
-                    <div className="col-sm-9">
-                      <input type="text" id="postion-name"  className="form-control w-100" aria-describedby="emailHelp" placeholder="Enter Position"/>
-                    </div>
-                    <div class="col-sm-3">
-                      <button type="button" className="btn btn-success w-100" onClick={this.addPosition.bind(this)}>Add</button>
-                    </div>
+          </div>
+          <div className ="col">
+            <div class="card border-white">
+              <div class="card-body">
+                <div className = "row">
+                  <div className ="col-sm-12">
+                    <h5 className ="font-weight-bold text-dark">Positions</h5>
                   </div>
-                  <div id="postionListContainer" className="row">
+                  <div className="col-sm-9">
+                    <input type="text" id="postion-name"  className="form-control w-100" aria-describedby="emailHelp" placeholder="Enter Position"/>
+                  </div>
+                  <div class="col-sm-3">
+                    <button type="button" className="btn btn-success w-100" onClick={this.addPosition.bind(this)}>Add</button>
+                  </div>
+                </div>
+                <div id="postionListContainer" className="row">
 
-                  </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className ="col">
+            <div class="card border-white">
+              <div class="card-body">
+                <div className = "row">
+                  <div className ="col-sm-12">
+                    <h5 className ="font-weight-bold text-dark">Status</h5>
+                  </div>
+                  <div className="col-sm-9">
+                    <input type="text" id="postion-name"  className="form-control w-100" aria-describedby="emailHelp" placeholder="Enter Position"/>
+                  </div>
+                  <div class="col-sm-3">
+                    <button type="button" className="btn btn-success w-100" onClick={this.addStatus.bind(this)}>Add</button>
+                  </div>
+                </div>
+                <div id="statusContainer" className="row">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

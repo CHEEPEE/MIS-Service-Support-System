@@ -51,6 +51,6 @@
   <script type="text/babel" src="utils.js"></script>
   <script type="text/babel" src="modals.js"></script>
   <script type="text/babel">
-    navToUtils();
+    navToUsers();
   </script>
 </html>
